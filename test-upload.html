@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Song Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        input, textarea {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .progress {
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Song Upload</h1>
+        
+        <div class="input-group">
+            <label for="backendUrl">Backend URL:</label>
+            <input type="text" id="backendUrl" value="http://localhost:1337">
+        </div>
+        
+        <form id="uploadForm">
+            <div class="input-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" required value="Test Song">
+            </div>
+            
+            <div class="input-group">
+                <label for="artist">Artist:</label>
+                <input type="text" id="artist" required value="Test Artist">
+            </div>
+            
+            <div class="input-group">
+                <label for="album">Album:</label>
+                <input type="text" id="album" required value="Test Album">
+            </div>
+            
+            <div class="input-group">
+                <label for="description">Description:</label>
+                <textarea id="description" required>Test Description</textarea>
+            </div>
+            
+            <div class="input-group">
+                <label for="file">Audio File:</label>
+                <input type="file" id="file" accept="audio/*" required>
+            </div>
+            
+            <button type="submit">Upload Song</button>
+        </form>
+        
+        <div class="progress" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <h2>Results:</h2>
+        <pre id="results">Fill the form and click Upload to test...</pre>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize with current values
+            const savedUrl = localStorage.getItem('backendUrl');
+            if (savedUrl) {
+                document.getElementById('backendUrl').value = savedUrl;
+            }
+            
+            // Form submission
+            document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const backendUrl = document.getElementById('backendUrl').value;
+                const title = document.getElementById('title').value;
+                const artist = document.getElementById('artist').value;
+                const album = document.getElementById('album').value;
+                const description = document.getElementById('description').value;
+                const fileInput = document.getElementById('file');
+                const results = document.getElementById('results');
+                const progressContainer = document.getElementById('progressContainer');
+                const progressBar = document.getElementById('progressBar');
+                
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    results.textContent = 'Please select a file';
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                
+                // Create FormData
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('title', title);
+                formData.append('artist', artist);
+                formData.append('album', album);
+                formData.append('description', description);
+                
+                // Get token
+                const token = localStorage.getItem('access_token') || 'mock-token-12345';
+                
+                // Show progress
+                progressContainer.style.display = 'block';
+                progressBar.style.width = '0%';
+                
+                try {
+                    results.textContent = 'Uploading...';
+                    
+                    // First test health endpoint
+                    try {
+                        const healthResponse = await fetch(`${backendUrl}/api/v1/health`);
+                        if (!healthResponse.ok) {
+                            throw new Error(`Health check failed: ${healthResponse.status} ${healthResponse.statusText}`);
+                        }
+                        results.textContent = 'Health check passed. Starting upload...';
+                    } catch (healthError) {
+                        results.textContent = `Health check failed: ${healthError.message}`;
+                        progressContainer.style.display = 'none';
+                        return;
+                    }
+                    
+                    // Save backend URL
+                    localStorage.setItem('backendUrl', backendUrl);
+                    
+                    // Create XMLHttpRequest for progress tracking
+                    const xhr = new XMLHttpRequest();
+                    
+                    xhr.upload.addEventListener('progress', function(e) {
+                        if (e.lengthComputable) {
+                            const percentComplete = (e.loaded / e.total) * 100;
+                            progressBar.style.width = percentComplete + '%';
+                        }
+                    });
+                    
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 201) {
+                                try {
+                                    const response = JSON.parse(xhr.responseText);
+                                    results.textContent = `Upload successful!\nResponse: ${JSON.stringify(response, null, 2)}`;
+                                } catch (e) {
+                                    results.textContent = `Upload successful!\nResponse: ${xhr.responseText}`;
+                                }
+                            } else {
+                                results.textContent = `Error: ${xhr.status}\nResponse: ${xhr.responseText}`;
+                            }
+                        }
+                    };
+                    
+                    xhr.open('POST', `${backendUrl}/api/v1/song/upload`, true);
+                    xhr.setRequestHeader('x-auth-token', token);
+                    xhr.send(formData);
+                    
+                } catch (error) {
+                    progressContainer.style.display = 'none';
+                    results.textContent = `Error: ${error.message}`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

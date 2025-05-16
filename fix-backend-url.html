@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Backend URL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        input {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .card h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fix Backend URL</h1>
+        
+        <div class="card">
+            <h3>Current Settings</h3>
+            <div id="currentSettings">Loading...</div>
+        </div>
+        
+        <div class="card">
+            <h3>Update Backend URL</h3>
+            <div class="input-group">
+                <label for="backendUrl">Backend URL:</label>
+                <input type="text" id="backendUrl" value="http://localhost:1337">
+            </div>
+            <button onclick="updateBackendUrl()">Update URL</button>
+            <button onclick="testConnection()">Test Connection</button>
+        </div>
+        
+        <div class="card">
+            <h3>Authentication</h3>
+            <button onclick="setMockToken()">Set Mock Token</button>
+            <button onclick="clearToken()">Clear Token</button>
+            <div id="tokenStatus">Checking token...</div>
+        </div>
+        
+        <div class="card">
+            <h3>Results</h3>
+            <pre id="results">Ready...</pre>
+        </div>
+    </div>
+
+    <script>
+        // Display current settings
+        function displayCurrentSettings() {
+            const currentSettings = document.getElementById('currentSettings');
+            const backendUrl = localStorage.getItem('backendUrl') || 'Not set (will default to http://localhost:1337)';
+            const token = localStorage.getItem('access_token');
+            
+            currentSettings.innerHTML = `
+                <p><strong>Backend URL:</strong> ${backendUrl}</p>
+                <p><strong>Authentication:</strong> ${token ? 'Token found' : 'No token'}</p>
+            `;
+            
+            // Update token status
+            updateTokenStatus();
+            
+            // Update input field
+            if (localStorage.getItem('backendUrl')) {
+                document.getElementById('backendUrl').value = localStorage.getItem('backendUrl');
+            }
+        }
+        
+        // Update token status
+        function updateTokenStatus() {
+            const tokenStatus = document.getElementById('tokenStatus');
+            const token = localStorage.getItem('access_token');
+            
+            if (token) {
+                tokenStatus.innerHTML = `<p style="color: green;">✓ Token found: ${token.substring(0, 10)}...</p>`;
+            } else {
+                tokenStatus.innerHTML = `<p style="color: red;">✗ No authentication token found</p>`;
+            }
+        }
+        
+        // Update backend URL
+        function updateBackendUrl() {
+            const backendUrl = document.getElementById('backendUrl').value.trim();
+            const results = document.getElementById('results');
+            
+            if (!backendUrl) {
+                results.textContent = 'Please enter a valid URL';
+                return;
+            }
+            
+            localStorage.setItem('backendUrl', backendUrl);
+            results.textContent = `Backend URL updated to: ${backendUrl}`;
+            displayCurrentSettings();
+        }
+        
+        // Test connection
+        async function testConnection() {
+            const backendUrl = document.getElementById('backendUrl').value.trim();
+            const results = document.getElementById('results');
+            
+            if (!backendUrl) {
+                results.textContent = 'Please enter a valid URL';
+                return;
+            }
+            
+            results.textContent = 'Testing connection...';
+            
+            try {
+                const response = await fetch(`${backendUrl}/api/v1/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    results.textContent = `Connection successful!\nResponse: ${JSON.stringify(data, null, 2)}`;
+                } else {
+                    results.textContent = `Error: ${response.status} ${response.statusText}\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                results.textContent = `Connection failed: ${error.message}`;
+            }
+        }
+        
+        // Set mock token
+        function setMockToken() {
+            localStorage.setItem('access_token', 'mock-token-12345');
+            document.getElementById('results').textContent = 'Mock token set: mock-token-12345';
+            updateTokenStatus();
+        }
+        
+        // Clear token
+        function clearToken() {
+            localStorage.removeItem('access_token');
+            document.getElementById('results').textContent = 'Authentication token cleared';
+            updateTokenStatus();
+        }
+        
+        // Initialize
+        window.onload = function() {
+            displayCurrentSettings();
+        };
+    </script>
+</body>
+</html>

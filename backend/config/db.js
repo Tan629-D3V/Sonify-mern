@@ -11,11 +11,11 @@ dotenv.config();
 
 // Create a new MongoClient with proper SSL configuration
 const client = new MongoClient(process.env.MONGO_URI, {
-  ssl: true,
-  sslValidate: true,
+  tls: true,
   retryWrites: true,
-  w: 'majority'
+  w: 'majority',
 });
+
 
 const conn = await client.connect();
 conn.once("open", () => {

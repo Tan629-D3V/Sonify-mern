@@ -87,9 +87,10 @@ const Register = () => {
             type="password"
             placeholder="Password"
             name="password"
+            value={inputs.password}
+            onChange={handleChange}
             className="border border-b-blue-900 outline-none rounded-sm placeholder:px-1 h-8"
             required
-            onChange={handleChange}
           />
 
           {err && <p className="text-red-500">{err}</p>}

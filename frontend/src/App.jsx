@@ -22,22 +22,14 @@ import { FetchContextState } from "./Context/FetchContext";
 const Layout = () => {
   return (
     <div className="relative z-0 w-screen">
-      <SidebarContextState>
-        <SongContextState>
-          <FetchContextState>
-            <Navbar />
-            <QueueContextState>
-            <div className="">
-              <Outlet />
-            </div>
-            <div className="">
-              <AudioPlayer />
-              <BackendStatus />
-            </div>
-            </QueueContextState>
-          </FetchContextState>
-        </SongContextState>
-      </SidebarContextState>
+      <Navbar />
+      <div className="">
+        <Outlet />
+      </div>
+      <div className="">
+        <AudioPlayer />
+        <BackendStatus />
+      </div>
     </div>
   );
 };

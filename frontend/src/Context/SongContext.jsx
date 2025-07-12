@@ -3,8 +3,10 @@ import { createContext, useState, useRef, useEffect } from "react";
 export const SongContext = createContext();
 
 export const SongContextState = ({ children }) => {
-  // Default backend URL
-  const [backendUrl, setBackendUrl] = useState("http://localhost:1337");
+  // Default backend URL - use environment variable if available
+  const [backendUrl, setBackendUrl] = useState(
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:1337"
+  );
   const audio = new Audio();
 
   // Try to load backend URL from localStorage

@@ -1,7 +1,7 @@
 /**
  * Playlist Controller
- * Part of Sonify Music App developed by Tan629
- * Handles all playlist-related operations including creation, deletion, and song management
+ * Part of Music Groovo developed by Tan629
+ * Handles playlist-related operations
  */
 
 import mongodb from "mongodb";

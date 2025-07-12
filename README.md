@@ -1,6 +1,6 @@
-# Sonify Music Streaming App
+# Music Groovo - Music Streaming App
 
-Sonify is a modern, full-stack music streaming web application built with the MERN stack (MongoDB, Express, React, Node.js). It allows users to register, log in, upload and stream songs, create and manage playlists, and enjoy music through a responsive and interactive interface.
+Music Groovo is a modern, full-stack music streaming web application built with the MERN stack (MongoDB, Express, React, Node.js). It allows users to register, log in, upload and stream songs, create and manage playlists, and enjoy music through a responsive and interactive interface.
 
 ---
 

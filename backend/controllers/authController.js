@@ -1,7 +1,7 @@
 /**
- * Authentication Controller
- * Part of Sonify Music App developed by Tan629
- * Handles user authentication including login and registration
+ * Auth Controller
+ * Part of Music Groovo developed by Tan629
+ * Handles authentication operations
  */
 
 import bcrypt from "bcryptjs";

@@ -1,22 +1,25 @@
 /**
  * Database Configuration
- * Part of Sonify Music App developed by Tan629
+ * Part of Music Groovo developed by Tan629
  * Handles MongoDB connection setup
  */
 
 import { MongoClient } from "mongodb";
-import dontenv from "dotenv";
+import dotenv from "dotenv";
 
-dontenv.config();
+dotenv.config();
 
-// Create a new MongoClient
+// Create a new MongoClient with proper SSL configuration
 const client = new MongoClient(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  ssl: true,
+  sslValidate: true,
+  retryWrites: true,
+  w: 'majority'
 });
 
 const conn = await client.connect();
 conn.once("open", () => {
   console.log("MongoDB database connection established successfully");
 });
+
 export default conn;

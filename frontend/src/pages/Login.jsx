@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiLogIn, FiMail, FiLock, FiUserPlus } from "react-icons/fi";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { SongContext } from "../Context/SongContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { __URL__ } = useContext(SongContext);
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -17,9 +19,6 @@ const Login = () => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setError("");
   };
-
-  // Always use the local backend server
-  const __URL__ = "http://localhost:1337";
 
   const handleSubmit = async (e) => {
     e.preventDefault();

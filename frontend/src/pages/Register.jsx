@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { SongContext } from "../Context/SongContext";
+
 const Register = () => {
   const [inputs, setInputs] = useState({
     fullName: "",
@@ -9,6 +11,7 @@ const Register = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const { __URL__ } = useContext(SongContext);
   const [err, setErr] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -16,9 +19,6 @@ const Register = () => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setErr(null);
   };
-
-  // Always use the local backend server
-  const __URL__ = "http://localhost:1337";
 
   const handleSubmit = async (e) => {
     e.preventDefault();

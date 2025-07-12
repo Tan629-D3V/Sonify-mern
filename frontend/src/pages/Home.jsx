@@ -63,7 +63,7 @@ const Home = () => {
             className="space-y-6"
           >
             <h1 className="text-5xl md:text-7xl text-white font-extrabold drop-shadow-lg hero-text">
-              <span className="text-primary">Sonify</span>
+              <span className="text-primary">Music Groovo</span>
             </h1>
             <p className="text-xl md:text-3xl text-white/90 drop-shadow-md max-w-2xl mx-auto">
               Discover, stream, and share your favorite music. Anytime, anywhere.

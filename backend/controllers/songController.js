@@ -1,7 +1,7 @@
 /**
  * Song Controller
- * Part of Sonify Music App developed by Tan629
- * Handles all song-related operations including upload, streaming, and deletion
+ * Part of Music Groovo developed by Tan629
+ * Handles song-related operations
  */
 
 import conn from "../config/db.js";

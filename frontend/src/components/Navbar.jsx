@@ -33,7 +33,7 @@ const Navbar = () => {
         >
           <span className="flex items-center gap-2">
             <FiMusic className="text-primary" />
-            Sonify
+            Music Groovo
           </span>
         </Link>
 

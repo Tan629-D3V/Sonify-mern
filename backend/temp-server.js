@@ -1,7 +1,7 @@
 /**
- * Sonify Music App - Temporary Backend Server
+ * Music Groovo - Temporary Backend Server
  * Developed by Tan629
- * A simplified version of the main server with mock data for testing
+ * A temporary server for testing purposes
  */
 
 import express from "express";

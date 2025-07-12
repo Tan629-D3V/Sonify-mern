@@ -114,7 +114,7 @@ const MusicPlayer = () => {
   };
 
   return (
-    <div className="fixed bg-gray-200 bottom-0 right-0 left-0 px-5 flex  justify-between  items-center space-y-5">
+    <div className="fixed bg-gray-200 bottom-4 right-4 left-4 px-5 flex justify-between items-center space-y-5 rounded-lg shadow-lg">
       <div className=" lg:block flex space-x-5">
         {/* Image */}
         <img src={stereo} alt="" className="rounded-lg w-12 lg:w-24" />

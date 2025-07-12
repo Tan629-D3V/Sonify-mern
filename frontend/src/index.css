@@ -19,6 +19,7 @@
     @apply bg-dark text-text-primary font-sans antialiased overflow-x-hidden m-0 box-border w-full;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    padding-bottom: 6rem; /* Add bottom padding to prevent content from being hidden behind music player */
   }
 
   h1, h2, h3, h4, h5, h6 {

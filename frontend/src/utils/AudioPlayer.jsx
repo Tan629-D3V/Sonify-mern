@@ -100,7 +100,7 @@ const AudioPlayer = () => {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100 }}
-        className={`fixed bottom-0 left-0 right-0 bg-dark-card border-t border-dark-accent backdrop-blur-lg bg-opacity-95 shadow-lg transition-all duration-300 ${
+        className={`fixed bottom-4 left-4 right-4 bg-dark-card border border-dark-accent backdrop-blur-lg bg-opacity-95 shadow-lg transition-all duration-300 rounded-lg ${
           expanded ? "h-48 md:h-40" : "h-20"
         }`}
       >
